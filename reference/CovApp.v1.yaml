@@ -11,8 +11,7 @@ servers:
 paths:
   /questions:
     get:
-      summary: Your GET endpoint
-      tags: []
+      summary: Get All Questions
       responses:
         '200':
           description: OK
@@ -23,8 +22,9 @@ paths:
                 items:
                   $ref: '#/components/schemas/Question'
       operationId: get-questions
-      requestBody: {}
       description: Returns all questions
+      tags:
+        - paths
   '/questions/{id}':
     parameters:
       - schema:
@@ -33,8 +33,7 @@ paths:
         in: path
         required: true
     get:
-      summary: Your GET endpoint
-      tags: []
+      summary: Get Single Question
       responses:
         '200':
           description: OK
@@ -45,14 +44,24 @@ paths:
                   - $ref: '#/components/schemas/Question'
                   - $ref: '#/components/schemas/QuestionRadio'
       operationId: get-questions-id
-      requestBody: {}
       description: Returns the question with the given ID
+      tags:
+        - paths
   /results:
     get:
-      summary: Your GET endpoint
-      tags: []
-      responses: {}
+      summary: Results
       operationId: get-answers
+      tags:
+        - paths
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Result'
     post:
       summary: ''
       operationId: post-answers
@@ -63,7 +72,9 @@ paths:
             application/json:
               schema:
                 type: object
-                properties: {}
+                properties:
+                  '':
+                    type: string
     parameters: []
   '/results/{id}':
     parameters:
@@ -73,11 +84,18 @@ paths:
         in: path
         required: true
     get:
-      summary: Your GET endpoint
-      tags: []
-      responses: {}
+      summary: Get Result
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
       operationId: get-answers-id
       description: Get a Questionaire Result
+      tags:
+        - paths
   '/results/{id}/test-result':
     parameters:
       - schema:
@@ -86,7 +104,7 @@ paths:
         in: path
         required: true
     post:
-      summary: ''
+      summary: Add Test Result to Answer
       operationId: post-results-id-test-result
       responses:
         '200':
@@ -103,41 +121,51 @@ paths:
                   type: string
                 validationAuthority:
                   type: string
+      tags:
+        - paths
 components:
   schemas:
     GenericResponse:
       title: GenericResponse
       type: object
       description: Generic Response
+      x-tags:
+        - models
       properties:
         language:
-          type: string
+          $ref: '#/components/schemas/ENUM_Language'
         data:
           type: object
         errorMessage:
           type: string
         errorCode:
           type: number
+      required:
+        - language
     Question:
       title: Question
       type: object
+      x-tags:
+        - models
       properties:
         id:
-          type: string
+          $ref: '#/components/schemas/GUID'
         category:
           type: string
         comment:
           type: string
         text:
-          type: string
+          $ref: '#/components/schemas/TranslationKey'
         inputType:
-          type: string
-        options:
-          type: string
+          $ref: '#/components/schemas/InputType'
         xmlTag:
           type: string
         type:
           $ref: '#/components/schemas/QuestionType'
+        choices:
+          type: array
+          items:
+            type: string
       required:
         - id
     QuestionType:
@@ -157,15 +185,14 @@ components:
         - date
         - text
       example: date
+      x-tags:
+        - models
     TranslationKey:
       title: TranslationKey
       type: string
       description: A Translation Key that can be used to request the corresponding translation
       x-examples:
         example-1: application_title
-    QuestionRadio:
-      allOf:
-        - $ref: '#/components/schemas/Question'
     AnswerQuestion:
       title: AnswerQuestion
       type: object
@@ -177,6 +204,8 @@ components:
         dataType:
           type: string
       description: The Answer to one Question
+      x-tags:
+        - models
     Result:
       title: QuestionnaireResult
       description: The complete Answer to one Questionaire
@@ -192,7 +221,10 @@ components:
           properties:
             threeWords:
               type: array
-              example: '["blue", "dog", "house"]'
+              example:
+                - blue
+                - dog
+                - house
               items:
                 type: string
             code:
@@ -200,3 +232,26 @@ components:
               example: '"A5HJ-2LUP"'
         testResult:
           type: string
+    GUID:
+      title: GUID
+      type: string
+      description: Unique Identifier of the resource
+    Q_Choice:
+      title: Q_Choice
+      type: object
+      properties:
+        value:
+          type: string
+          description: The Weight for Scoring Algorithm
+        text:
+          $ref: '#/components/schemas/TranslationKey'
+    ENUM_Language:
+      type: string
+      title: ENUM_Language
+      enum:
+        - none
+        - de
+        - en
+        - pl
+      x-tags:
+        - models
