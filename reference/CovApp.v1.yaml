@@ -13,8 +13,18 @@ paths:
     get:
       summary: Your GET endpoint
       tags: []
-      responses: {}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Question'
       operationId: get-questions
+      requestBody: {}
+      description: Returns all questions
   '/questions/{id}':
     parameters:
       - schema:
@@ -25,14 +35,74 @@ paths:
     get:
       summary: Your GET endpoint
       tags: []
-      responses: {}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Question'
+                  - $ref: '#/components/schemas/QuestionRadio'
       operationId: get-questions-id
-  /questionaire:
+      requestBody: {}
+      description: Returns the question with the given ID
+  /results:
     get:
       summary: Your GET endpoint
       tags: []
       responses: {}
-      operationId: get-questionaire
+      operationId: get-answers
+    post:
+      summary: ''
+      operationId: post-answers
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+    parameters: []
+  '/results/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+      operationId: get-answers-id
+      description: Get a Questionaire Result
+  '/results/{id}/test-result':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    post:
+      summary: ''
+      operationId: post-results-id-test-result
+      responses:
+        '200':
+          description: OK
+      description: Add the test Result to a questionaire
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: ''
+              properties:
+                id:
+                  type: string
+                validationAuthority:
+                  type: string
 components:
   schemas:
     GenericResponse:
@@ -48,3 +118,85 @@ components:
           type: string
         errorCode:
           type: number
+    Question:
+      title: Question
+      type: object
+      properties:
+        id:
+          type: string
+        category:
+          type: string
+        comment:
+          type: string
+        text:
+          type: string
+        inputType:
+          type: string
+        options:
+          type: string
+        xmlTag:
+          type: string
+        type:
+          $ref: '#/components/schemas/QuestionType'
+      required:
+        - id
+    QuestionType:
+      type: string
+      title: QuestionType
+      enum:
+        - checkbox
+        - radio
+        - text
+      example: text
+      x-examples:
+        example-1: text
+    InputType:
+      type: string
+      title: InputType
+      enum:
+        - date
+        - text
+      example: date
+    TranslationKey:
+      title: TranslationKey
+      type: string
+      description: A Translation Key that can be used to request the corresponding translation
+      x-examples:
+        example-1: application_title
+    QuestionRadio:
+      allOf:
+        - $ref: '#/components/schemas/Question'
+    AnswerQuestion:
+      title: AnswerQuestion
+      type: object
+      properties:
+        questionId:
+          type: string
+        data:
+          type: string
+        dataType:
+          type: string
+      description: The Answer to one Question
+    Result:
+      title: QuestionnaireResult
+      description: The complete Answer to one Questionaire
+      type: object
+      properties:
+        answers:
+          $ref: '#/components/schemas/AnswerQuestion'
+        id:
+          type: string
+        otherIdentifiers:
+          type: object
+          description: Other Identifiers which can be easily memorized by humans
+          properties:
+            threeWords:
+              type: array
+              example: '["blue", "dog", "house"]'
+              items:
+                type: string
+            code:
+              type: string
+              example: '"A5HJ-2LUP"'
+        testResult:
+          type: string
