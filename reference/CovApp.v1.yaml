@@ -1,0 +1,50 @@
+openapi: 3.0.0
+info:
+  title: CovApp
+  version: '1.0'
+  description: API for standarized Questionaires Development and Analysis
+  license:
+    name: MIT
+servers:
+  - url: 'http://localhost:3000'
+    description: Development
+paths:
+  /questions:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+      operationId: get-questions
+  '/questions/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+      operationId: get-questions-id
+  /questionaire:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+      operationId: get-questionaire
+components:
+  schemas:
+    GenericResponse:
+      title: GenericResponse
+      type: object
+      description: Generic Response
+      properties:
+        language:
+          type: string
+        data:
+          type: object
+        errorMessage:
+          type: string
+        errorCode:
+          type: number
