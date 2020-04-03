@@ -1,11 +1,22 @@
 # General
 
-The Questionaire APIs first goal is to have a clean question database. 
-Considering Multilangual usage only translation-keys should be used. 
+## Goals: 
+1. Clean questions database with score for each question 
+2. Questionaires database. 
+   - One Master Questionaire (for further usage in apps etc.)
+   - Create other Questionaire (based on the same questions with additional ones)
+2. Providing the Translation for all questions. 
 
+## Secondary Targets
+1. Collecting Anonymous questionaire results 
+2. Linking the questionnaire result to a clinical result (positive/negative)
+
+
+
+## Notes
 GET Request: 
 return the translation-key, no language preference
-Additional Endpoints should be created to get a question or questionaire in a specific language
+with url or path parameter `language` questionaire with the translation should be returned
 
 
 PUT POST etc. Requests 
