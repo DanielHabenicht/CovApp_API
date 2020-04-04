@@ -193,6 +193,13 @@ paths:
             type: string
           in: query
           name: language
+  /evaluationModel:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+      operationId: get-evaluationModel
+      description: 'The Evaluation Model mapping the answers to a score. '
 components:
   schemas:
     GenericResponse:

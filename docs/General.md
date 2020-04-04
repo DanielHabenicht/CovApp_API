@@ -5,7 +5,8 @@
 2. Questionaires database. 
    - One Master Questionaire (for further usage in apps etc.)
    - Create other Questionaire (based on the same questions with additional ones)
-2. Providing the Translation for all questions. 
+3. Logic to evaluate the questions 
+4. Providing the Translation for all questions. 
 
 ## Secondary Targets
 1. Collecting Anonymous questionaire results 
