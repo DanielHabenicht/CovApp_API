@@ -24,7 +24,6 @@ paths:
       operationId: get-questions
       description: 'Returns all single questions '
       tags:
-        - paths
         - questions
   '/questions/{id}':
     parameters:
@@ -46,14 +45,12 @@ paths:
       operationId: get-questions-id
       description: Returns the question with the given ID
       tags:
-        - paths
         - questions
   /answers:
     get:
       summary: Answers - List all
       operationId: get-answers
       tags:
-        - paths
         - answers
       responses:
         '200':
@@ -76,7 +73,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/AnswerQuestionnaire'
       tags:
-        - paths
         - answers
       requestBody:
         content:
@@ -104,7 +100,6 @@ paths:
       operationId: get-answers-id
       description: Get the answers of Questionaire
       tags:
-        - paths
         - answers
   '/answers/{id}/test-result':
     parameters:
@@ -138,17 +133,21 @@ paths:
                   type: string
                   description: 'The Backend identifier, e.g. from a Laboratory to get the result of the test Id from'
       tags:
-        - paths
         - answers
   /questionnaire:
     get:
       summary: Questionnaire - List All
       tags:
-        - paths
         - questionnaire
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Questionnaire'
       operationId: get-questionnaire
       description: Lists all questionaires
   '/questionnaire/{id}':
@@ -161,7 +160,6 @@ paths:
     get:
       summary: Questionnaire - Get One
       tags:
-        - paths
         - questionnaire
       responses:
         '200':
@@ -169,8 +167,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties: {}
+                $ref: '#/components/schemas/Questionnaire'
       operationId: get-questionnaire-id
       description: 'Returns a whole questionaire containing the questions in the order they are displayed and the logic for leaps inbetween. '
   /views/full-questionnaire:
@@ -236,7 +233,7 @@ components:
         choices:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/Q_Choice'
       required:
         - id
     QuestionType:
@@ -395,10 +392,23 @@ components:
       title: Questionnaire_Page
       type: object
       description: Pages as defined in SurveyJS
+      x-tags:
+        - models
       properties:
         name:
           type: string
         elements:
-          $ref: '#/components/schemas/Question'
-      x-tags:
-        - models
+          oneOf:
+            - $ref: '#/components/schemas/Question'
+            - $ref: '#/components/schemas/API_Reference'
+tags:
+  - name: models
+    description: Everything about the models used in this API
+  - name: answers
+    description: The Answers Endpoint
+  - name: questions
+    description: The Questions Endpoint
+  - name: questionnaire
+    description: The Questionnaire Endpoint
+  - name: views
+    description: 'The Views Endpoint, supplying custom views for easier data retrieval'
